@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Flashcard App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="cardInput">
+        <input type="text" id="questionInput" placeholder="Enter question" />
+        <input type="text" id="answerInput" placeholder="Enter answer" />
+        <button id="addButton">Add</button>
+        <button id="endButton">End</button>
+    </div>
+
+    <div id="flashcard" class="flashcard" style="display: none;">
+        <div class="front">Question</div>
+        <div class="back">Answer</div>
+    </div>
+
+    <button id="flipButton" style="display: none;">Flip</button>
+    <button id="nextButton" style="display: none;">Next</button>
+    <button id="addMoreButton" style="display: none;">Add More</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
