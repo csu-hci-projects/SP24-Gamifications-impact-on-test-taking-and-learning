@@ -11,8 +11,8 @@ document.getElementById('addButton').addEventListener('click', function() {
             answer: answerInput.value
         });
 
-        questionInput.value = ''; // Clear input field
-        answerInput.value = ''; // Clear input field
+        questionInput.value = '';
+        answerInput.value = '';
     } else {
         alert("Please enter both a question and an answer.");
     }
@@ -25,16 +25,16 @@ document.getElementById('endButton').addEventListener('click', function() {
         document.getElementById('flashcard').style.display = 'block';
         document.getElementById('flipButton').style.display = 'inline';
         document.getElementById('nextButton').style.display = 'inline';
-        document.getElementById('addMoreButton').style.display = 'inline'; // Show the add more button
+        document.getElementById('addMoreButton').style.display = 'inline';
     }
 });
 
 document.getElementById('addMoreButton').addEventListener('click', function() {
-    document.getElementById('cardInput').style.display = 'block'; // Show input fields
-    document.getElementById('flashcard').style.display = 'none'; // Hide the flashcard
-    document.getElementById('flipButton').style.display = 'none'; // Hide the flip button
-    document.getElementById('nextButton').style.display = 'none'; // Hide the next button
-    document.getElementById('addMoreButton').style.display = 'none'; // Hide the add more button
+    document.getElementById('cardInput').style.display = 'block';
+    document.getElementById('flashcard').style.display = 'none';
+    document.getElementById('flipButton').style.display = 'none';
+    document.getElementById('nextButton').style.display = 'none';
+    document.getElementById('addMoreButton').style.display = 'none';
 });
 
 document.getElementById('flipButton').addEventListener('click', function() {
@@ -43,7 +43,7 @@ document.getElementById('flipButton').addEventListener('click', function() {
 
 document.getElementById('nextButton').addEventListener('click', function() {
     currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-    if(currentCardIndex === 0) { // Optionally, hide or show the addMoreButton when the last card is reached again
+    if(currentCardIndex === 0) {
         document.getElementById('addMoreButton').style.display = 'inline';
     }
     updateFlashcard();
@@ -52,7 +52,7 @@ document.getElementById('nextButton').addEventListener('click', function() {
 function updateFlashcard() {
     const card = flashcards[currentCardIndex];
     const flashcardDiv = document.getElementById('flashcard');
-    flashcardDiv.classList.remove('flipped'); // Reset to front side
+    flashcardDiv.classList.remove('flipped');
     flashcardDiv.querySelector('.front').textContent = card.question;
     flashcardDiv.querySelector('.back').textContent = card.answer;
 }
