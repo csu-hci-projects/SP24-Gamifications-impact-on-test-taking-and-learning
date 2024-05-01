@@ -1,52 +1,170 @@
 import csv
-from dialogs import DialogInput, TransitionScreen, QuizDialogInput,QuizNameInput
+import sys, os
+import pygame
+import utils
+import constants
+from myclasses import FlashCards
+from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 
-def create_quiz_csv(quiz_name):
-    questions = []
-    while True:
-        question_text = input("Enter the question text (or type 'done' to finish): ")
-        if question_text.lower() == 'done':
-            break
+# ------------------------------------------------------------
+#                    class CreateQuizName
+# ------------------------------------------------------------
 
-        options = []
-        for option_label in ['A', 'B', 'C', 'D']:
-            option_text = input(f"Enter option {option_label}: ")
-            options.append(option_text)
+class CreateQuizName:
+    def __init__(self, width=600, height=600):
+        self.width = width
+        self.height = height
+        self.init_pygame()
+        self.clock = pygame.time.Clock()
+        self.quiz_name = ""
+        self.prompt_text = "Enter the name for your quiz:"
+        self.font = pygame.font.Font(None, 35)
+        self._initialize_rectangles()
+        self.text_background_color = constants.LIGHTGREY
+        self.BG_COLOR = constants.WHITE
+        self.keep_looping = True
 
-        correct_answer = input("Enter the correct answer (A, B, C, or D): ")
+    def init_pygame(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Quiz Name Input")
 
-        # Add the question details to the list
-        questions.append({'question': question_text, 'options': options, 'correct_answer': correct_answer})
+    def _initialize_rectangles(self):
+        long_thin_rectangle_width = self.width - 20
+        long_thin_rectangle_height = 45
+        offset = int((long_thin_rectangle_height * 1.25))
+        self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
+        self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
-    # Write the questions to a CSV file
-    csv_file_path = f"data/quizzes/{quiz_name}.csv"
-    with open(csv_file_path, 'w', newline='') as csvfile:
-        fieldnames = ['Question', 'Option A', 'Option B', 'Option C', 'Option D', 'Correct Answer']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.keep_looping = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.keep_looping = False
+                elif event.key == pygame.K_BACKSPACE:
+                    self.quiz_name = self.quiz_name[:-1]
+                elif event.key == pygame.K_RETURN:
+                    self.keep_looping = False
+                else:
+                    self.quiz_name += event.unicode
 
-        writer.writeheader()
-        for question in questions:
-            writer.writerow({
-                'Question': question['question'],
-                'Option A': question['options'][0],
-                'Option B': question['options'][1],
-                'Option C': question['options'][2],
-                'Option D': question['options'][3],
-                'Correct Answer': question['correct_answer']
-            })
+    def draw(self):
+        self.screen.fill(self.BG_COLOR)
 
-    print(f"Quiz '{quiz_name}' created successfully at '{csv_file_path}'")
+        prompt_surface = self.font.render(self.prompt_text, True, constants.BLACK)
+        self.screen.blit(prompt_surface, self.prompt_rect)
 
-def create_quiz_name():
-    print("REACHED HERE")
-    quiz_name_input = QuizNameInput()
-    quiz_name = quiz_name_input.main()
-    print(quiz_name)
-    return quiz_name
+        pygame.draw.rect(self.screen, self.text_background_color, self.input_rect)
+
+        # Render the input text surface
+        input_surface = self.font.render(self.quiz_name, True, constants.BLACK)
+        input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))  # Adjust the position
+        self.screen.blit(input_surface, input_rect)
+        pygame.display.flip()
+
+    def main(self):
+        while self.keep_looping:
+            self.clock.tick(constants.FRAME_RATE)
+            self.handle_events()
+            self.draw()
+        return self.quiz_name
+
+# ------------------------------------------------------------
+#                    class CreateQuizQuestions
+# ------------------------------------------------------------
+
+class CreateQuizQuestions:
+    def __init__(self, quiz_name, width=800, height=600):
+        self.quiz_name = quiz_name
+        self.width = width
+        self.height = height
+        self.init_pygame()
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(None, 35)
+        self.question = ""
+        self.answer = ""
+        self.prompt_text = "Enter a question:"
+        self.prompt_text_answer = "Enter the answer:"
+        self.text_background_color = constants.LIGHTGREY
+        self.BG_COLOR = constants.WHITE
+        self.keep_looping = True
+        self.input_rect = pygame.Rect(10, 50, self.width - 20, 40)
+
+    def init_pygame(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Create Quiz Questions")
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.keep_looping = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.keep_looping = False
+                elif event.key == pygame.K_RETURN:
+                    if self.answer:  # Save the question-answer pair when both are provided
+                        self.add_question_to_csv()
+                        self.question = ""
+                        self.answer = ""
+                        self.prompt_text = "Enter a question:"
+                        self.prompt_text_answer = "Enter the answer:"
+                    elif self.question:  # Switch to answer input when question is provided
+                        self.prompt_text = self.prompt_text_answer
+                    else:
+                        self.keep_looping = False
+                elif event.key == pygame.K_BACKSPACE:
+                    if self.prompt_text == self.prompt_text_answer:
+                        self.answer = self.answer[:-1]
+                    else:
+                        self.question = self.question[:-1]
+                else:
+                    if self.prompt_text == self.prompt_text_answer:
+                        self.answer += event.unicode
+                    else:
+                        self.question += event.unicode
+
+    def draw(self):
+        self.screen.fill(self.BG_COLOR)
+
+        # Draw question prompt
+        prompt_surface = self.font.render(self.prompt_text, True, constants.BLACK)
+        self.screen.blit(prompt_surface, (10, 10))
+
+        # Draw input rectangle
+        pygame.draw.rect(self.screen, self.text_background_color, self.input_rect)
+
+        # Render the input text surface
+        if self.prompt_text == self.prompt_text_answer:
+            input_surface = self.font.render(self.answer, True, constants.BLACK)
+        else:
+            input_surface = self.font.render(self.question, True, constants.BLACK)
+        input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))
+        self.screen.blit(input_surface, input_rect)
+
+        pygame.display.flip()
+
+    def add_question_to_csv(self):
+        file_path = os.path.join("data", "quizzes", f"{self.quiz_name}.csv")
+        with open(file_path, "a", newline="") as csv_file:
+            csv_writer = csv.writer(csv_file)
+            csv_writer.writerow([self.question, self.answer])
+
+    def main(self):
+        while self.keep_looping:
+            self.clock.tick(constants.FRAME_RATE)
+            self.handle_events()
+            self.draw()
 
 def main():
-    quiz_name = create_quiz_name()
-    create_quiz_csv(quiz_name)
+    mydialog = CreateQuizName()
+    quiz_name = mydialog.main()
+    print("QUIZ NAME IS: ", quiz_name)
+    mydialog = CreateQuizQuestions(quiz_name)
+    mydialog.main()
+    
 
 if __name__ == "__main__":
     main()

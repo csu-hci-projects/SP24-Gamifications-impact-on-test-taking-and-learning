@@ -1,7 +1,8 @@
 import quiz
 import create
 import utils
-from dialogs import DialogInput, TransitionScreen, QuizDialogInput, QuizNameInput
+from create import CreateQuizName, CreateQuizQuestions
+from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 import os, sys
 from myclasses import UserScores
 # os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -37,8 +38,9 @@ def sub_loop(user_name):
         quiz_name = get_quiz_name()
         quiz.main(user_name, quiz_name)
     elif what_to_do == "make a quiz":
-        quiz_name = create.create_quiz_name()
-        print("NEW QUIZ NAME:", quiz_name)
+        create.main()
+        #print("NEW QUIZ NAME:", quiz_name)
+        
     elif what_to_do == "review your accumulated score":
         quiz_name = get_quiz_name()
         read_stats(user_name, quiz_name)
@@ -65,7 +67,7 @@ def select_prequiz_actions():
     what_to_do = mylist[what_to_do-1].lower().strip()
     return what_to_do
 
-'''
+
 def select_quiz_actions():
     show_list = ["What would you like to do with this quiz?"]
     show_list.append(" ")
@@ -115,7 +117,7 @@ def read_stats(user_name, quiz_name):
     print(total_score)
     mydialog = DialogInput(total_score, [], show_possible_responses=False)
     mydialog.main()
-'''
+
 
 def is_int(value):
         """Check if the given value can be converted to an integer."""
@@ -125,7 +127,7 @@ def is_int(value):
         except ValueError:
             return False
 
-'''
+
 def get_quiz_name():
     filedir = os.path.join("data", "quizzes")
     files = os.listdir(filedir)
@@ -162,7 +164,7 @@ def get_quiz_name():
     else:
         return "quit"
     return quiz_name
-'''
+
 
 def main(user_name):
     #Shows splashscreen of team logo when code is ran

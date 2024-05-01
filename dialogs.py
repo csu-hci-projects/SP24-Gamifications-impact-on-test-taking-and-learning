@@ -370,13 +370,13 @@ class TransitionScreen:
                     self.keep_looping = False
                 else:
                     pass
-                    # self.user_text += event.unicode
 
     def draw(self):
         self.screen.fill(constants.UGLY_PINK)
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
 
+    #Change timer to extend or limit how long logo is shown
     def main(self):
         counter = 0
         self.all_sprites.add(self.mysprite)
@@ -388,68 +388,6 @@ class TransitionScreen:
             if counter > 25:
                 self.keep_looping = False
         return
-
-class QuizNameInput:
-    def __init__(self, width=600, height=600):
-        self.width = width
-        self.height = height
-        self.init_pygame()
-        self.clock = pygame.time.Clock()
-        self.quiz_name = ""
-        self.prompt_text = "Enter the name for your quiz:"
-        self.font = pygame.font.Font(None, 35)
-        self._initialize_rectangles()
-        self.text_background_color = constants.LIGHTGREY
-        self.BG_COLOR = constants.WHITE
-        self.keep_looping = True
-
-    def init_pygame(self):
-        pygame.init()
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Quiz Name Input")
-
-    def _initialize_rectangles(self):
-        long_thin_rectangle_width = self.width - 20
-        long_thin_rectangle_height = 45
-        offset = int((long_thin_rectangle_height * 1.25))
-        self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
-        self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.keep_looping = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.keep_looping = False
-                elif event.key == pygame.K_BACKSPACE:
-                    self.quiz_name = self.quiz_name[:-1]
-                elif event.key == pygame.K_RETURN:
-                    self.keep_looping = False
-                else:
-                    self.quiz_name += event.unicode
-
-    def draw(self):
-        self.screen.fill(self.BG_COLOR)
-
-        prompt_surface = self.font.render(self.prompt_text, True, constants.BLACK)
-        self.screen.blit(prompt_surface, self.prompt_rect)
-
-        pygame.draw.rect(self.screen, self.text_background_color, self.input_rect)
-
-        # Render the input text surface
-        input_surface = self.font.render(self.quiz_name, True, constants.BLACK)
-        input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))  # Adjust the position
-        self.screen.blit(input_surface, input_rect)
-        pygame.display.flip()
-
-    def main(self):
-        while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
-            self.handle_events()
-            self.draw()
-        return self.quiz_name
-
 
 if __name__ == "__main__":
     mydialog = QuizDialogInput(["text list"], [1, 2, 3])
