@@ -295,7 +295,11 @@ def get_directories(filepath):
     # [print(i) for i in mylist]
     return mylist
 
-
+def string_to_list(text, line_width):
+    lines = []
+    for i in range(0, len(text), line_width):
+        lines.append(text[i:i+line_width])
+    return lines
 
 # ======================================================
 

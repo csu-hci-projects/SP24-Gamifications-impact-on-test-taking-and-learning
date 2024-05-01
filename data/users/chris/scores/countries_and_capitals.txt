@@ -19,8 +19,8 @@ times_question_presented: 2
 user_name: chris
 quiz_name: countries_and_capitals
 question_index: 3
-times_question_correct: 3
-times_question_presented: 4
+times_question_correct: 4
+times_question_presented: 5
 
 user_name: chris
 quiz_name: countries_and_capitals
