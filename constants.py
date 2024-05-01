@@ -4,7 +4,7 @@ NUMBER_OF_BLOCKS_WIDE = 12 #TODO: shouldn't this be determined by the mapfile?
 NUMBER_OF_BLOCKS_HIGH = 12 #TODO: shouldn't this be determined by the mapfile?
 # SCREEN_WIDTH = TILESIZE * NUMBER_OF_BLOCKS_WIDE
 # SCREEN_HEIGHT = TILESIZE * NUMBER_OF_BLOCKS_HIGH
-TITLE = "Code your own flashcard application (@Strange451)".title()
+TITLE = "Gamifications Impact on Test Taking and Learning (Sawyer Parker and Zhaoying Song)".title()
 
 IMAGES = "/Users/BigBlue/Documents/Programming/game_resources/images"
 

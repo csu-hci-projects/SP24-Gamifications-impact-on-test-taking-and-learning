@@ -1,5 +1,7 @@
 import quiz
+import create
 import utils
+from create import CreateQuizName, CreateQuizQuestions
 from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 import os, sys
 from myclasses import UserScores
@@ -9,7 +11,7 @@ def goodbye():
     mydialog = TransitionScreen()
     mydialog.main()
     sys.exit()
-
+'''
 def sub_loop(user_name):
     quiz_name = get_quiz_name()
     if quiz_name == "quit":
@@ -27,8 +29,46 @@ def sub_loop(user_name):
         raise ValueError(s)
     # ---- ----
     return True
+'''
 
-def select_action():
+def sub_loop(user_name):
+    what_to_do = select_prequiz_actions()
+    # ---- ----
+    if what_to_do == "take a quiz":
+        quiz_name = get_quiz_name()
+        quiz.main(user_name, quiz_name)
+    elif what_to_do == "make a quiz":
+        create.main()
+        #print("NEW QUIZ NAME:", quiz_name)
+        
+    elif what_to_do == "review your accumulated score":
+        quiz_name = get_quiz_name()
+        read_stats(user_name, quiz_name)
+    elif what_to_do == "reset your scores":
+        quiz_name = get_quiz_name()
+        reset_stats(user_name, quiz_name)
+    else:
+        s = "I don't recognize this: {}".format(what_to_do)
+        raise ValueError(s)
+    # ---- ----
+    return True
+
+def select_prequiz_actions():
+    show_list = ["What would you like to do?"]
+    show_list.append(" ")
+    mylist = ["Take a quiz"]
+    mylist.append("Make a quiz")
+    mylist.append("Review your accumulated score")
+    mylist.append("Reset your scores")
+    show_list_body = ["{}) {}".format(count+1, i) for count, i in enumerate(mylist)]
+    possible_choices = list(range(1, len(mylist)+1))
+    mydialog = QuizDialogInput(show_list + show_list_body, possible_choices, show_possible_responses=False, line_width=50)
+    what_to_do = int(mydialog.main())
+    what_to_do = mylist[what_to_do-1].lower().strip()
+    return what_to_do
+
+
+def select_quiz_actions():
     show_list = ["What would you like to do with this quiz?"]
     show_list.append(" ")
     mylist = ["Take the quiz"]
@@ -42,7 +82,6 @@ def select_action():
     return what_to_do
 
 def reset_stats(user_name, quiz_name):
-    # /Users/BigBlue/Documents/Programming/Python/flashcards/2022/flashcards_v2/data/users/chris/scores/testing01.txt
     filename = "{}.txt".format(quiz_name)
     filepath = os.path.join("data", "users", user_name, "scores", filename)
     if os.path.isfile(filepath) == False: raise ValueError("Error")
@@ -79,6 +118,7 @@ def read_stats(user_name, quiz_name):
     mydialog = DialogInput(total_score, [], show_possible_responses=False)
     mydialog.main()
 
+
 def is_int(value):
         """Check if the given value can be converted to an integer."""
         try:
@@ -86,6 +126,7 @@ def is_int(value):
             return True
         except ValueError:
             return False
+
 
 def get_quiz_name():
     filedir = os.path.join("data", "quizzes")
@@ -103,7 +144,7 @@ def get_quiz_name():
     mylist.append("{}) Exit the program".format(mycounter))
     mytext = ["                       **** MAIN MENU ****"]
     mytext.append(" ")
-    mytext.append("Pick a quiz:")
+    mytext.append("Pick an option:")
     mytext.append(" ")
     mytext += mylist
     mytext.append(" ")
@@ -124,7 +165,9 @@ def get_quiz_name():
         return "quit"
     return quiz_name
 
+
 def main(user_name):
+    #Shows splashscreen of team logo when code is ran
     mydialog = TransitionScreen()
     mydialog.main()
     # ---- ----
@@ -132,8 +175,6 @@ def main(user_name):
     while keep_looping == True:
         keep_looping = sub_loop(user_name)
     # ---- ----
-    # mydialog = TransitionScreen()
-    # mydialog.main()
 
 if __name__ == "__main__":
     user_name = "chris"

@@ -3,7 +3,7 @@ import pygame
 import constants
 import os
 import textwrap
-os.environ['SDL_VIDEO_WINDOW_POS'] = "1000, 400"
+os.environ['SDL_VIDEO_WINDOW_POS'] = "400, 100"
 
 # -------------------------------------------------------------
 #                class SimpleSprite
@@ -326,7 +326,7 @@ class QuizDialogInput:
 # ------------------------------------------------------------
 
 class TransitionScreen:
-    def __init__(self, image_to_display="splashscreen01.png",
+    def __init__(self, image_to_display="GamificationLogo.png",
                  screen_width=600, screen_height=600):
         self.width = screen_width
         self.height = screen_height
@@ -336,7 +336,6 @@ class TransitionScreen:
         # --------------------------------------
         self.big_window_background_color = constants.WHITE
         # --------------------------------------
-        # filepath = utils.get_filepath02(image_to_display, constants.IMAGES)
         self.mysprite = SimpleSprite(image_to_display)
         self.keep_looping = True
 
@@ -371,13 +370,13 @@ class TransitionScreen:
                     self.keep_looping = False
                 else:
                     pass
-                    # self.user_text += event.unicode
 
     def draw(self):
         self.screen.fill(constants.UGLY_PINK)
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
 
+    #Change timer to extend or limit how long logo is shown
     def main(self):
         counter = 0
         self.all_sprites.add(self.mysprite)
@@ -386,7 +385,7 @@ class TransitionScreen:
             self.clock.tick(10)
             self.handle_events()
             self.draw()
-            if counter > 15:
+            if counter > 25:
                 self.keep_looping = False
         return
 
