@@ -1,4 +1,5 @@
 import csv
+from dialogs import DialogInput, TransitionScreen, QuizDialogInput,QuizNameInput
 
 def create_quiz_csv(quiz_name):
     questions = []
@@ -36,8 +37,15 @@ def create_quiz_csv(quiz_name):
 
     print(f"Quiz '{quiz_name}' created successfully at '{csv_file_path}'")
 
+def create_quiz_name():
+    print("REACHED HERE")
+    quiz_name_input = QuizNameInput()
+    quiz_name = quiz_name_input.main()
+    print(quiz_name)
+    return quiz_name
+
 def main():
-    quiz_name = input("Enter the name of the quiz: ")
+    quiz_name = create_quiz_name()
     create_quiz_csv(quiz_name)
 
 if __name__ == "__main__":
