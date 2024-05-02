@@ -46,7 +46,8 @@ class CreateQuizName:
                 elif event.key == pygame.K_BACKSPACE:
                     self.quiz_name = self.quiz_name[:-1]
                 elif event.key == pygame.K_RETURN:
-                    self.keep_looping = False
+                    if len(self.quiz_name.strip()) > 0:
+                        self.keep_looping = False
                 else:
                     self.quiz_name += event.unicode
 
@@ -62,6 +63,15 @@ class CreateQuizName:
         input_surface = self.font.render(self.quiz_name, True, constants.BLACK)
         input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))  # Adjust the position
         self.screen.blit(input_surface, input_rect)
+
+        directions1 = "When field is complete, press enter to continue"
+        directions2 = "Type name of existing quiz to add more terms"
+        directions_surface1 = self.font.render(directions1, True, constants.BLACK)
+        directions_surface2 = self.font.render(directions2, True, constants.BLACK)
+        directions_rect1 = directions_surface1.get_rect(left=10, top=60)
+        directions_rect2 = directions_surface2.get_rect(left=10, top=90)
+        self.screen.blit(directions_surface1, directions_rect1)
+        self.screen.blit(directions_surface2, directions_rect2)
         pygame.display.flip()
 
     def main(self):
@@ -76,7 +86,7 @@ class CreateQuizName:
 # ------------------------------------------------------------
 
 class CreateQuizQuestions:
-    def __init__(self, quiz_name, width=800, height=600):
+    def __init__(self, quiz_name, width=600, height=600):
         self.quiz_name = quiz_name
         self.width = width
         self.height = height
@@ -90,7 +100,14 @@ class CreateQuizQuestions:
         self.text_background_color = constants.LIGHTGREY
         self.BG_COLOR = constants.WHITE
         self.keep_looping = True
-        self.input_rect = pygame.Rect(10, 50, self.width - 20, 40)
+        self._initialize_rectangles()
+
+    def _initialize_rectangles(self):
+        long_thin_rectangle_width = self.width - 20
+        long_thin_rectangle_height = 45
+        offset = int((long_thin_rectangle_height * 1.25))
+        self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
+        self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
     def init_pygame(self):
         pygame.init()
@@ -143,6 +160,23 @@ class CreateQuizQuestions:
             input_surface = self.font.render(self.question, True, constants.BLACK)
         input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))
         self.screen.blit(input_surface, input_rect)
+
+        if self.prompt_text == "Enter a question:":
+            # Draw directions below the input box
+            directions1 = "When field is complete, press enter to continue"
+            directions2 = "Or leave empty and press enter to exit"
+            directions_surface1 = self.font.render(directions1, True, constants.BLACK)
+            directions_surface2 = self.font.render(directions2, True, constants.BLACK)
+            directions_rect1 = directions_surface1.get_rect(left=10, top=60)
+            directions_rect2 = directions_surface2.get_rect(left=10, top=90)
+            self.screen.blit(directions_surface1, directions_rect1)
+            self.screen.blit(directions_surface2, directions_rect2)
+        if self.prompt_text == self.prompt_text_answer:
+            # Draw directions below the input box
+            directions = "When field is complete, press enter to continue"
+            directions_surface = self.font.render(directions, True, constants.BLACK)
+            directions_rect = directions_surface.get_rect(left=10, top=60)
+            self.screen.blit(directions_surface, directions_rect)
 
         pygame.display.flip()
 

@@ -20,39 +20,18 @@ def key_value(mystring, mydict):
     mydict[mykey] = myvalue
     return mydict
 
-def read_data_file(filepath, expected_fields):
+def read_data_file(filepath):
     data = []
-    current_data = {}
-    field_count = 0
-
     try:
-        with open(filepath, 'r') as file:
-            for line in file:
-                print(f"Reading line: {line}")  # Debug print
-                line = line.strip()
-                if line == '':
-                    if field_count == expected_fields:
-                        data.append(current_data)
-                        print(f"Added block: {current_data}")  # Debug print
-                        current_data = {}
-                        field_count = 0
-                    else:
-                        raise ValueError("Block has incorrect number of fields")
-                else:
-                    key, value = line.split(': ', 1)
-                    current_data[key.strip()] = value.strip()
-                    field_count += 1
-
-            # Handle last block if file does not end with a blank line
-            if field_count == expected_fields and current_data:
-                data.append(current_data)
-                print(f"Added last block: {current_data}")  # Debug print
-            elif field_count != 0:
-                raise ValueError("Last block has incorrect number of fields")
-
+        with open(filepath, 'r', newline='') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if len(row) != 2:
+                    raise ValueError("Each row in the CSV file must have exactly two fields (question, answer)")
+                question, answer = row
+                data.append({"question": question.strip(), "answer": answer.strip()})
     except IOError:
         raise IOError(f"Cannot read file: {filepath}")
-
     return data
 
 

@@ -4,7 +4,7 @@ import utils
 from create import CreateQuizName, CreateQuizQuestions
 from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 import os, sys
-from myclasses import UserScores
+#from myclasses import UserScores
 # os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 def goodbye():
@@ -44,7 +44,7 @@ def select_quiz_type():
 def sub_loop(user_name):
     what_to_do = select_prequiz_actions()
     # ---- ----
-    if what_to_do == "make a quiz":
+    if what_to_do == "make/edit a quiz":
         create.main()
     elif what_to_do == "take a quiz":
         quiz_name = get_quiz_name()
@@ -52,7 +52,7 @@ def sub_loop(user_name):
             return False  # Handles exit case if user selects 'quit'
         quiz_type = select_quiz_type()  # Get the quiz type from the user
         quiz.main(user_name, quiz_name, quiz_type)  # Pass the quiz type to your quiz function
-    elif what_to_do == "make a quiz":
+    elif what_to_do == "make/edit a quiz":
         create.main()
     elif what_to_do == "review your accumulated score":
         quiz_name = get_quiz_name()
@@ -67,9 +67,11 @@ def sub_loop(user_name):
 
 
 def select_prequiz_actions():
-    show_list = ["What would you like to do?"]
+    show_list = ["                       **** MAIN MENU ****"]
     show_list.append(" ")
-    mylist = ["Make a quiz"]
+    show_list.append("What would you like to do?")
+    show_list.append(" ")
+    mylist = ["Make/Edit a quiz"]
     mylist.append("Take a quiz")
     mylist.append("Review your accumulated score")
     mylist.append("Reset your scores")
@@ -155,8 +157,7 @@ def get_quiz_name():
     # ---- ---- ---- ----
     mylist.append(" ")
     mylist.append("{}) Exit the program".format(mycounter))
-    mytext = ["                       **** MAIN MENU ****"]
-    mytext.append(" ")
+    mytext = ["Quiz Main Menu"]
     mytext.append("Pick an option:")
     mytext.append(" ")
     mytext += mylist
@@ -190,5 +191,5 @@ def main(user_name):
     # ---- ----
 
 if __name__ == "__main__":
-    user_name = "chris"
+    user_name = "Soyboy227"
     main(user_name)
