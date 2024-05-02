@@ -8,10 +8,11 @@ from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 #                    class DialogQuiz
 # ------------------------------------------------------------
 class DialogQuiz:
-    def __init__(self, user_name, quiz_name, percent_threshold=None, width=600, height=600, line_width=40):
+    def __init__(self, user_name, quiz_name, percent_threshold=None, quiz_type=None, width=600, height=600, line_width=40):
         self.user_name = user_name
         self.quiz_name = quiz_name
         self.percent_threshold = percent_threshold
+        self.quiz_type = quiz_type
         # ---- ---- ---- ----
         self.flashcards = None
         self.current_index = 1
@@ -181,14 +182,29 @@ class DialogQuiz:
 # *********************************************
 # *********************************************
 
-def main(user_name, quiz_name):
+def handle_multiple_choice_quiz(user_name, quiz_name):
     percent_threshold = 90
-    mydialog = DialogQuiz(user_name, quiz_name, percent_threshold)
+    mydialog = DialogQuiz(user_name, quiz_name, percent_threshold, "multiple choices")
     was_successful = mydialog.read_data()
-    if was_successful == False:
-        pass
-    else:
+    if was_successful:
         mydialog.main()
+
+def handle_fill_in_blank_quiz(user_name, quiz_name):
+    percent_threshold = 90
+    mydialog = DialogQuiz(user_name, quiz_name, percent_threshold, "fill in the blank")
+    was_successful = mydialog.read_data()
+    if was_successful:
+        mydialog.main()
+        
+def main(user_name, quiz_name, quiz_type):
+    print(f"Starting {quiz_type} quiz: {quiz_name} for user: {user_name}")
+    # Dispatching to the appropriate quiz handler based on quiz type
+    if quiz_type == "multiple choices":
+        handle_multiple_choice_quiz(user_name, quiz_name)
+    elif quiz_type == "fill in the blank":
+        handle_fill_in_blank_quiz(user_name, quiz_name)
+    else:
+        raise ValueError("Invalid quiz type selected")
 
 if __name__ == "__main__":
     user_name = "chris"

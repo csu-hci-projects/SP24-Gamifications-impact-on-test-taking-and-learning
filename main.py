@@ -30,6 +30,16 @@ def sub_loop(user_name):
     # ---- ----
     return True
 '''
+def select_quiz_type():
+    options = ["Multiple Choices", "Fill in the Blank"]
+    show_list = ["What type of quiz would you like to take?"]
+    show_list.append(" ")
+    show_list_body = [f"{i+1}) {option}" for i, option in enumerate(options)]
+    possible_choices = list(range(1, len(options)+1))
+    mydialog = QuizDialogInput(show_list + show_list_body, possible_choices, show_possible_responses=False, line_width=50)
+    quiz_type = int(mydialog.main())
+    return options[quiz_type - 1].lower()  
+
 
 def sub_loop(user_name):
     what_to_do = select_prequiz_actions()
@@ -38,7 +48,12 @@ def sub_loop(user_name):
         create.main()
     elif what_to_do == "take a quiz":
         quiz_name = get_quiz_name()
-        quiz.main(user_name, quiz_name)
+        if quiz_name == "quit":
+            return False  # Handles exit case if user selects 'quit'
+        quiz_type = select_quiz_type()  # Get the quiz type from the user
+        quiz.main(user_name, quiz_name, quiz_type)  # Pass the quiz type to your quiz function
+    elif what_to_do == "make a quiz":
+        create.main()
     elif what_to_do == "review your accumulated score":
         quiz_name = get_quiz_name()
         read_stats(user_name, quiz_name)
@@ -48,8 +63,8 @@ def sub_loop(user_name):
     else:
         s = "I don't recognize this: {}".format(what_to_do)
         raise ValueError(s)
-    # ---- ----
     return True
+
 
 def select_prequiz_actions():
     show_list = ["What would you like to do?"]
@@ -129,7 +144,7 @@ def is_int(value):
 def get_quiz_name():
     filedir = os.path.join("data", "quizzes")
     files = os.listdir(filedir)
-    files = [i.replace(".txt", "").upper() for i in files ]
+    files = [i.replace(".csv", "").upper() for i in files ]
     # ---- ---- ---- ----
     mylist = []
     mycounter = 1
