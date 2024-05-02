@@ -34,13 +34,11 @@ def sub_loop(user_name):
 def sub_loop(user_name):
     what_to_do = select_prequiz_actions()
     # ---- ----
-    if what_to_do == "take a quiz":
+    if what_to_do == "make a quiz":
+        create.main()
+    elif what_to_do == "take a quiz":
         quiz_name = get_quiz_name()
         quiz.main(user_name, quiz_name)
-    elif what_to_do == "make a quiz":
-        create.main()
-        #print("NEW QUIZ NAME:", quiz_name)
-        
     elif what_to_do == "review your accumulated score":
         quiz_name = get_quiz_name()
         read_stats(user_name, quiz_name)
@@ -56,8 +54,8 @@ def sub_loop(user_name):
 def select_prequiz_actions():
     show_list = ["What would you like to do?"]
     show_list.append(" ")
-    mylist = ["Take a quiz"]
-    mylist.append("Make a quiz")
+    mylist = ["Make a quiz"]
+    mylist.append("Take a quiz")
     mylist.append("Review your accumulated score")
     mylist.append("Reset your scores")
     show_list_body = ["{}) {}".format(count+1, i) for count, i in enumerate(mylist)]
