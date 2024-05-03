@@ -4,6 +4,7 @@ from dialogs import DialogInput
 # ------------------------------------------------------------
 #                    class UserScore
 # ------------------------------------------------------------
+'''
 class UserScore:
     def __init__(self, mydict):
         # print("mydict: {}".format(mydict))
@@ -43,10 +44,11 @@ class UserScore:
         s += "times_question_correct: {}, ".format(self.times_question_correct)
         s += "times_question_presented: {}".format(self.times_question_correct)
         print(s)
-
+'''
 # ------------------------------------------------------------
 #                    class UserScores
 # ------------------------------------------------------------
+'''
 class UserScores:
     def __init__(self, user_name, quiz_name):
         self.user_name = user_name
@@ -139,7 +141,7 @@ class UserScores:
     def debug_print(self):
         for elem in self.inner:
             elem.debug_print(self.user_name, self.quiz_name)
-
+'''
 # ------------------------------------------------------------
 #                    class FlashCard
 # ------------------------------------------------------------
@@ -226,33 +228,34 @@ class FlashCards:
         self.required_times_presented = 2
 
     def read_data(self):
-        filename = "{}.txt".format(self.quiz_name)
+        filename = "{}.csv".format(self.quiz_name)
         filepath = os.path.join("data", "quizzes", filename)
-        if os.path.isfile(filepath) == False:
-            s = "I can't find this file: {}".format(filepath)
-            raise ValueError(s)
-        mylist = utils.read_data_file(filepath, 7)
-        # [print(i) for i in mylist]
-        # ----
-        for mydict in mylist:
-            newobject = FlashCard(mydict)
-            self.inner.append(newobject)
-        # ----
-        if not self.score_threshold is None:
+        if not os.path.isfile(filepath):
+            raise ValueError("File not found: {}".format(filepath))
+        
+        flashcards = {}
+        with open(filepath, 'r') as file:
+            for line in file:
+                question, answer = line.strip().split(',')
+                flashcards[question] = answer
+        
+        self.inner = flashcards.values()  # Assuming FlashCard objects are initialized with the questions and answers
+        '''
+        if self.score_threshold is not None:
             was_successful = self.filter_questions()
-            if was_successful == False:
-                mylist = ["There are no more questions!"]
-                mylist.append(" ")
-                mylist.append("You may want to change")
-                mylist.append("self.score_threshold in the")
-                mylist.append("flashcard class or remove it.")
-                mylist.append(" ")
-                mylist.append("Press <Return> to continue")
-                mydialog = DialogInput(mylist, [], show_possible_responses=False)
-                mydialog.main()
-                return False
-            else:
-                return True
+            if not was_successful:
+        '''
+        mylist = ["There are no more questions!"]
+        mylist.append(" ")
+        mylist.append("You may want to change")
+        mylist.append("self.score_threshold in the")
+        mylist.append("flashcard class or remove it.")
+        mylist.append(" ")
+        mylist.append("Press <Return> to continue")
+        mydialog = DialogInput(mylist, [], show_possible_responses=False)
+        mydialog.main()
+        return False
+        
         return True
 
     def filter_questions(self):
