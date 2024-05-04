@@ -13,14 +13,15 @@ def goodbye():
     sys.exit()
 
 def select_quiz_type():
-    options = ["Multiple Choices", "Fill in the Blank"]
+    options = ["Multiple Choices", "Fill in the Blank", "Mixed Quiz"]
     show_list = ["What type of quiz would you like to take?"]
     show_list.append(" ")
     show_list_body = [f"{i+1}) {option}" for i, option in enumerate(options)]
     possible_choices = list(range(1, len(options)+1))
     mydialog = QuizDialogInput(show_list + show_list_body, possible_choices, show_possible_responses=False, line_width=50)
     quiz_type = int(mydialog.main())
-    return options[quiz_type - 1].lower()  
+    return options[quiz_type - 1].lower()
+
 
 
 def sub_loop(user_name):
