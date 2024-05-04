@@ -46,8 +46,8 @@ class CreateQuizName:
                 elif event.key == pygame.K_BACKSPACE:
                     self.quiz_name = self.quiz_name[:-1]
                 elif event.key == pygame.K_RETURN:
-                    if len(self.quiz_name.strip()) > 0:
-                        self.keep_looping = False
+                    #if len(self.quiz_name.strip()) > 0:
+                    self.keep_looping = False
                 else:
                     self.quiz_name += event.unicode
 
@@ -66,12 +66,16 @@ class CreateQuizName:
 
         directions1 = "When field is complete, press enter to continue"
         directions2 = "Type name of existing quiz to add more terms"
+        directions3 = "Or leave empty and hit enter to exit"
         directions_surface1 = self.font.render(directions1, True, constants.BLACK)
         directions_surface2 = self.font.render(directions2, True, constants.BLACK)
+        directions_surface3 = self.font.render(directions3, True, constants.BLACK)
         directions_rect1 = directions_surface1.get_rect(left=10, top=60)
-        directions_rect2 = directions_surface2.get_rect(left=10, top=90)
+        directions_rect2 = directions_surface2.get_rect(left=10, top=100)
+        directions_rect3 = directions_surface3.get_rect(left=10, top=140)
         self.screen.blit(directions_surface1, directions_rect1)
         self.screen.blit(directions_surface2, directions_rect2)
+        self.screen.blit(directions_surface3, directions_rect3)
         pygame.display.flip()
 
     def main(self):
@@ -115,6 +119,8 @@ class CreateQuizQuestions:
         pygame.display.set_caption("Create Quiz Questions")
 
     def handle_events(self):
+        if len(self.quiz_name) == 0:
+            self.keep_looping = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.keep_looping = False
@@ -195,9 +201,11 @@ class CreateQuizQuestions:
 def main():
     mydialog = CreateQuizName()
     quiz_name = mydialog.main()
+    #Debug Print Statement
     print("QUIZ NAME IS: ", quiz_name)
     mydialog = CreateQuizQuestions(quiz_name)
     mydialog.main()
+    
     
 
 if __name__ == "__main__":
