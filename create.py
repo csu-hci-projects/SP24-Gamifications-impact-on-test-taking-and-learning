@@ -3,7 +3,6 @@ import sys, os
 import pygame
 import utils
 import constants
-from myclasses import FlashCards
 from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 
 # ------------------------------------------------------------
