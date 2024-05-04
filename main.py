@@ -11,25 +11,7 @@ def goodbye():
     mydialog = TransitionScreen()
     mydialog.main()
     sys.exit()
-'''
-def sub_loop(user_name):
-    quiz_name = get_quiz_name()
-    if quiz_name == "quit":
-        goodbye()
-    what_to_do = select_action()
-    # ---- ----
-    if what_to_do == "take the quiz":
-        quiz.main(user_name, quiz_name)
-    elif what_to_do == "review your accumulated score":
-        read_stats(user_name, quiz_name)
-    elif what_to_do == "reset your scores":
-        reset_stats(user_name, quiz_name)
-    else:
-        s = "I don't recognize this: {}".format(what_to_do)
-        raise ValueError(s)
-    # ---- ----
-    return True
-'''
+
 def select_quiz_type():
     options = ["Multiple Choices", "Fill in the Blank"]
     show_list = ["What type of quiz would you like to take?"]
