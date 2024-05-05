@@ -814,12 +814,12 @@ def csvToArray(quiz_name):
             flashcards[question] = answer
 
     #Debug print statement
-    print("UNSHUFFLED CARDS:", flashcards)
+    #print("UNSHUFFLED CARDS:", flashcards)
     temp = list(flashcards.items())
     random.shuffle(temp)
     flashcards_shuffled = dict(temp)
     #Debug print statement
-    print("SHUFFLED CARDS: ", flashcards_shuffled)
+    #print("SHUFFLED CARDS: ", flashcards_shuffled)
     return flashcards_shuffled
 
 #Handler for when multiple choice is selected by user

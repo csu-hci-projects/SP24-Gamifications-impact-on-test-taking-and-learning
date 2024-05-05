@@ -34,7 +34,7 @@ def sub_loop(user_name):
             return False  
         quiz_type = select_quiz_type() 
         quiz.main(user_name, quiz_name, quiz_type)  
-    elif what_to_do == "review a quiz":
+    elif what_to_do == "review/edit a quiz":
         quiz_name = get_quiz_name()
         if quiz_name == "quit":
             return False  
@@ -52,7 +52,7 @@ def select_prequiz_actions():
     show_list.append(" ")
     mylist = ["Make/Add to a quiz"]
     mylist.append("Take a quiz")
-    mylist.append("Review a quiz")
+    mylist.append("Review/Edit a quiz")
     show_list_body = ["{}) {}".format(count+1, i) for count, i in enumerate(mylist)]
     possible_choices = list(range(1, len(mylist)+1))
     mydialog = QuizDialogInput(show_list + show_list_body, possible_choices, show_possible_responses=False, line_width=50)

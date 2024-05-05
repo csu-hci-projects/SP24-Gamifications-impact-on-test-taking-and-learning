@@ -56,6 +56,8 @@ class ReviewFlashcards:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.keep_looping = False
+                    self.input_check = False
+                    self.chosen_index = -1
                 elif event.key == pygame.K_LEFT:
                     self.current_page = max(0, self.current_page - 1)
                 elif event.key == pygame.K_RIGHT:
@@ -132,10 +134,13 @@ class ReviewFlashcards:
         while self.keep_looping:
             self.handle_events()
             self.draw()
-        if(self.input_check):
-            return self.chosen_index
-        else:
-            return self.input_check
+
+        #Debug Print Statements
+        #print("EXITED WHILE LOOP, USER INPUT: ", self.user_input)
+        #print(self.chosen_index)
+
+        return self.chosen_index
+
 
 # ------------------------------------------------------------
 #                    class EditFlashcard
@@ -255,7 +260,7 @@ def parse_flashcards(quiz_name):
 def main(user_name,quiz_name):
     mydialog = ReviewFlashcards(user_name, quiz_name)
     chosen_index = mydialog.main()
-    if(utils.is_int(chosen_index)):
+    if(chosen_index >= 0):
         mydialog = EditFlashcard(user_name, quiz_name, chosen_index)
         mydialog.main()
 
