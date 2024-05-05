@@ -13,3 +13,9 @@ As of right now, we have divided the group into Sawyer working on the back end, 
 
 ## Meeting Times
 We have been using teams to communicate with one another, and have been meeting every Saturday to make a call, and some additional calls were made whenever neccessary. 
+
+### Downloads Necessary
+Python version 3.12.3
+Pygame version 2.5.2
+Pandas version 2.2.2
+Those should all be the most up to date version of that software
