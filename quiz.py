@@ -441,7 +441,7 @@ class MixedQuiz:
         self.quiz_name = quiz_name
         self.init_pygame()
         self.clock = pygame.time.Clock()
-        self.prompt_text = "Multiple Choice:"
+        self.prompt_text = "Mixed Choice:"
         self.font = pygame.font.Font(None, 35)
         self._initialize_rectangles()
         self.text_background_color = constants.LIGHTGREY
@@ -491,6 +491,7 @@ class MixedQuiz:
     def handle_events(self):
         if self.current_index < len(self.flashcards):
             if self.option_choice[self.current_index]:
+                self.prompt_text = "Multiple Choice:"
                 #Multiple Choice
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -516,6 +517,7 @@ class MixedQuiz:
                                 self.user_input += event.unicode
             else:
                 #Fill In the Blank
+                self.prompt_text = "Fill In The Blank:"
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.keep_looping = False
@@ -722,7 +724,7 @@ class MixedQuiz:
         
         self.screen.fill(constants.BG_COLOR)
 
-        summary_text = "Multiple Choice Quiz Summary:"
+        summary_text = "Mixed Quiz Summary:"
         summary_surface = self.font.render(summary_text, True, constants.BLACK)
         summary_rect = summary_surface.get_rect(center=(self.width // 2, 50))
         self.screen.blit(summary_surface, summary_rect)
