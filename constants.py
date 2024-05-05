@@ -1,12 +1,6 @@
-TILESIZE = 100
-# PLAYER_SIZE = 200
-NUMBER_OF_BLOCKS_WIDE = 12 #TODO: shouldn't this be determined by the mapfile?
-NUMBER_OF_BLOCKS_HIGH = 12 #TODO: shouldn't this be determined by the mapfile?
-# SCREEN_WIDTH = TILESIZE * NUMBER_OF_BLOCKS_WIDE
-# SCREEN_HEIGHT = TILESIZE * NUMBER_OF_BLOCKS_HIGH
-TITLE = "Gamifications Impact on Test Taking and Learning (Sawyer Parker and Zhaoying Song)".title()
+#COnstanst file full of color codes to potentially use when rendering the app
 
-IMAGES = "/Users/BigBlue/Documents/Programming/game_resources/images"
+TITLE = "Gamifications Impact on Test Taking and Learning (Sawyer Parker and Zhaoying Song)".title()
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -45,8 +39,7 @@ ORANGE6 = (255, 204, 153)
 ORANGE7 = (255, 229, 204)
 
 TRANSPARENT = (0, 0, 0, 0)
-# ----
-BG_COLOR = UGLY_PINK # (Used for debugging)
-# BG_COLOR = (255, 255, 255, 0)
+
+BG_COLOR = UGLY_PINK #Used for debugging and 
 
 FRAME_RATE = 40

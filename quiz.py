@@ -9,6 +9,7 @@ from dialogs import DialogInput, TransitionScreen, QuizDialogInput
 # ------------------------------------------------------------
 #                    class MultipleChoiceQuiz
 # ------------------------------------------------------------
+
 class MultipleChoiceQuiz:
     def __init__(self, user_name, quiz_name, width=600, height=600):
         self.width = width
@@ -16,7 +17,6 @@ class MultipleChoiceQuiz:
         self.user_name = user_name
         self.quiz_name = quiz_name
         self.init_pygame()
-        self.clock = pygame.time.Clock()
         self.prompt_text = "Multiple Choice:"
         self.font = pygame.font.Font(None, 35)
         self._initialize_rectangles()
@@ -33,6 +33,7 @@ class MultipleChoiceQuiz:
         self.answer_options = []
         self.correct_answer_index = 0
 
+    #Function to initialize some default rectangles that need to be rendered
     def _initialize_rectangles(self):
         long_thin_rectangle_width = self.width - 20
         long_thin_rectangle_height = 45
@@ -40,9 +41,11 @@ class MultipleChoiceQuiz:
         self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
         self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
+    #Function to read from the csv file user created and make into flashcards
     def read_data(self):
         self.flashcards = csvToArray(self.quiz_name)
 
+    #Function to shuffle the multiple choice answers shown to the user
     def shuffle_answers(self, index):
         correct_answer = list(self.flashcards.values())[index]
         all_answers = list(self.flashcards.values())
@@ -56,13 +59,14 @@ class MultipleChoiceQuiz:
 
         return answer_options, insert_index
 
+    #Function to initialize pygame
     def init_pygame(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Multiple Choice Quiz")
-        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 35)
 
+    #Handle events function to deal with user input
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -80,14 +84,15 @@ class MultipleChoiceQuiz:
                             self.input_inbounds = True
                         else:
                             self.input_inbounds = False
-                            print("Invalid input. Please enter A, B, C, or D.")
+                            #Debug print statement
+                            #print("Invalid input. Please enter A, B, C, or D.")
                     elif self.quiz_completed:
                         self.keep_looping = False
                 else:
                     if not self.quiz_completed:
                         self.user_input += event.unicode
 
-
+    #Draw function to display stuff to the user on the python application
     def draw(self):
         self.screen.fill(self.BG_COLOR)
 
@@ -134,7 +139,7 @@ class MultipleChoiceQuiz:
             self.screen.blit(input_surface, input_rect)
             pygame.display.flip()
 
-            if self.answer_entered and not self.quiz_completed and self.input_inbounds:
+            if self.answer_entered and not self.quiz_completed:
                 self.correct_answer_index = self.answer_options[self.current_index][1]
                 correct_answer = self.answer_options[self.current_index][0][self.correct_answer_index]
                 correct_letter = letter = chr(ord('A') + self.correct_answer_index)
@@ -178,7 +183,7 @@ class MultipleChoiceQuiz:
                 self.current_index += 1
                 self.user_input = ""
                 self.answer_entered = False
-            elif not self.input_inbounds:
+            elif (len(self.user_input)>0 and not self.user_input.strip().upper() in ['A', 'B', 'C', 'D']):
                 warning = "Invalid input. Please enter A, B, C, or D."
                 warning_surface = self.font.render(warning, True, constants.BLACK)
                 warning_rect = warning_surface.get_rect(left = self.prompt_rect.left, top = self.input_rect.bottom-80)
@@ -190,13 +195,14 @@ class MultipleChoiceQuiz:
 
         pygame.display.flip()
 
+    #Function to display the quiz results to the user upon quiz completion
     def display_score_screen(self, time_taken):
         num_correct = self.correct_counter
 
         total_questions = len(self.flashcards)
         percentage_score = (num_correct / total_questions) * 100 if total_questions > 0 else 0
         
-        self.screen.fill(constants.BG_COLOR)
+        self.screen.fill(constants.PURPLE3)
 
         summary_text = "Multiple Choice Quiz Summary:"
         summary_surface = self.font.render(summary_text, True, constants.BLACK)
@@ -234,7 +240,8 @@ class MultipleChoiceQuiz:
 
     def main(self):
         self.answer_options = []
-        print(self.flashcards)
+        #Debug print statement
+        #print(self.flashcards)
         for index in range(len(self.flashcards)):
             shuffled_answers = self.shuffle_answers(index)
             self.answer_options.append(shuffled_answers)
@@ -242,7 +249,6 @@ class MultipleChoiceQuiz:
         start_time = time.time()
         self.keep_looping = True
         while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
             self.handle_events()
             self.draw()
         end_time = time.time()
@@ -260,7 +266,6 @@ class FillInTheBlankQuiz:
         self.user_name = user_name
         self.quiz_name = quiz_name
         self.init_pygame()
-        self.clock = pygame.time.Clock()
         self.prompt_text = "Fill In the Blank:"
         self.font = pygame.font.Font(None, 35)
         self._initialize_rectangles()
@@ -274,6 +279,7 @@ class FillInTheBlankQuiz:
         self.answer_entered = False
         self.quiz_completed = False
 
+    #Function to initialize some default rectangles that need to be rendered
     def _initialize_rectangles(self):
         long_thin_rectangle_width = self.width - 20
         long_thin_rectangle_height = 45
@@ -281,16 +287,18 @@ class FillInTheBlankQuiz:
         self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
         self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
+    #Function to read from the csv file user created and make into flashcards
     def read_data(self):
         self.flashcards = csvToArray(self.quiz_name)
 
+    #Function to initialize pygame
     def init_pygame(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Fill in the Blank Quiz")
-        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 35)
 
+    #Handle events function to deal with user input
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -310,6 +318,7 @@ class FillInTheBlankQuiz:
                     if not self.quiz_completed:
                         self.user_input += event.unicode
 
+    #Draw function to display stuff to the user on the python application
     def draw(self):
         self.screen.fill(self.BG_COLOR)
 
@@ -378,13 +387,14 @@ class FillInTheBlankQuiz:
 
         pygame.display.flip()
 
+    #Function to display the quiz results to the user upon quiz completion
     def display_score_screen(self, time_taken):
         num_correct = self.correct_counter
 
         total_questions = len(self.flashcards)
         percentage_score = (num_correct / total_questions) * 100 if total_questions > 0 else 0
         
-        self.screen.fill(constants.BG_COLOR)  # Use default background color
+        self.screen.fill(constants.PURPLE3)
 
         summary_text = "Fill In the Blank Quiz Summary:"
         summary_surface = self.font.render(summary_text, True, constants.BLACK)
@@ -423,7 +433,6 @@ class FillInTheBlankQuiz:
     def main(self):
         start_time = time.time()
         while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
             self.handle_events()
             self.draw()
         end_time = time.time()
@@ -440,7 +449,6 @@ class MixedQuiz:
         self.user_name = user_name
         self.quiz_name = quiz_name
         self.init_pygame()
-        self.clock = pygame.time.Clock()
         self.prompt_text = "Mixed Choice:"
         self.font = pygame.font.Font(None, 35)
         self._initialize_rectangles()
@@ -458,6 +466,7 @@ class MixedQuiz:
         self.correct_answer_index = 0
         self.option_choice = []
 
+    #Function to initialize some default rectangles that need to be rendered
     def _initialize_rectangles(self):
         long_thin_rectangle_width = self.width - 20
         long_thin_rectangle_height = 45
@@ -465,9 +474,11 @@ class MixedQuiz:
         self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
         self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
+    #Function to read from the csv file user created and make into flashcards
     def read_data(self):
         self.flashcards = csvToArray(self.quiz_name)
 
+    #Function to shuffle the multiple choice answers shown to the user
     def shuffle_answers(self, index):
         correct_answer = list(self.flashcards.values())[index]
         all_answers = list(self.flashcards.values())
@@ -481,13 +492,14 @@ class MixedQuiz:
 
         return answer_options, insert_index
 
+    #Function to initialize pygame
     def init_pygame(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Mixed Quiz")
-        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 35)
 
+    #Handle events function to deal with user input
     def handle_events(self):
         if self.current_index < len(self.flashcards):
             if self.option_choice[self.current_index]:
@@ -509,7 +521,8 @@ class MixedQuiz:
                                     self.input_inbounds = True
                                 else:
                                     self.input_inbounds = False
-                                    print("Invalid input. Please enter A, B, C, or D.")
+                                    #Debug print statement
+                                    #print("Invalid input. Please enter A, B, C, or D.")
                             elif self.quiz_completed:
                                 self.keep_looping = False
                         else:
@@ -539,7 +552,7 @@ class MixedQuiz:
             self.quiz_completed = True
             self.keep_looping = False
 
-
+    #Draw function to display stuff to the user on the python application
     def draw(self):
         if self.current_index < len(self.flashcards):
             if self.option_choice[self.current_index]:
@@ -716,13 +729,14 @@ class MixedQuiz:
             self.quiz_completed = True
             self.keep_looping = False
 
+    #Function to display the quiz results to the user upon quiz completion
     def display_score_screen(self, time_taken):
         num_correct = self.correct_counter
 
         total_questions = len(self.flashcards)
         percentage_score = (num_correct / total_questions) * 100 if total_questions > 0 else 0
         
-        self.screen.fill(constants.BG_COLOR)
+        self.screen.fill(constants.PURPLE3)
 
         summary_text = "Mixed Quiz Summary:"
         summary_surface = self.font.render(summary_text, True, constants.BLACK)
@@ -760,13 +774,15 @@ class MixedQuiz:
 
     def main(self):
         self.answer_options = []
-        print(self.flashcards)
+        #Debug print statement
+        #print(self.flashcards)
         for index in range(len(self.flashcards)):
             shuffled_answers = self.shuffle_answers(index)
             self.answer_options.append(shuffled_answers)
 
         self.option_choice = [bool(random.getrandbits(1)) for _ in range(len(self.flashcards))]
-        print(self.option_choice)
+        #Debug print statement
+        #print(self.option_choice)
         
         for index in range(len(self.flashcards)):
             self.option_choice
@@ -774,7 +790,6 @@ class MixedQuiz:
         start_time = time.time()
         self.keep_looping = True
         while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
             self.handle_events()
             self.draw()
         end_time = time.time()
@@ -784,6 +799,8 @@ class MixedQuiz:
 # *********************************************
 # *********************************************
 
+#Function to convert a csv file into flashcards the user can view
+#Function also shuffles the questions up to not appear repetitive
 def csvToArray(quiz_name):
     filename = "{}.csv".format(quiz_name)
     filepath = os.path.join("data", "quizzes", filename)
@@ -796,26 +813,41 @@ def csvToArray(quiz_name):
             question, answer = line.strip().split(',')
             flashcards[question] = answer
 
-    return flashcards
+    #Debug print statement
+    #print("UNSHUFFLED CARDS:", flashcards)
+    temp = list(flashcards.items())
+    random.shuffle(temp)
+    flashcards_shuffled = dict(temp)
+    #Debug print statement
+    #print("SHUFFLED CARDS: ", flashcards_shuffled)
+    return flashcards_shuffled
 
+#Handler for when multiple choice is selected by user
 def handle_multiple_choice_quiz(user_name, quiz_name):
-    print("MULTIPLE CHOICE SELECTED")
+    #Debug print statement
+    #print("MULTIPLE CHOICE SELECTED")
     mydialog = MultipleChoiceQuiz(user_name, quiz_name)
     mydialog.main()
 
+#Handler for when fill in the blank is selected by user
 def handle_fill_in_blank_quiz(user_name, quiz_name):
-    print("FILL IN THE BLANK SELECTED")
+    #Debug print statement
+    #print("FILL IN THE BLANK SELECTED")
     mydialog = FillInTheBlankQuiz(user_name, quiz_name)
     mydialog.main()
 
+#Handler for when a mix of multiple choice/fill in the blank is selected by user
 def handle_mixed_quiz(user_name, quiz_name):
-    print("MIXED QUIZ SELECTED")
+    #Debug print statement
+    #print("MIXED QUIZ SELECTED")
     mydialog = MixedQuiz(user_name, quiz_name)
     mydialog.main()
         
 def main(user_name, quiz_name, quiz_type):
-    print(f"Starting {quiz_type} quiz: {quiz_name} for user: {user_name}")
-    # Dispatching to the appropriate quiz handler based on quiz type
+    #Debug print statement
+    #print(f"Starting {quiz_type} quiz: {quiz_name} for user: {user_name}")
+
+    # Selecting appropriate quiz handler based on quiz type
     if quiz_type == "multiple choices":
         handle_multiple_choice_quiz(user_name, quiz_name)
     elif quiz_type == "fill in the blank":
@@ -827,5 +859,6 @@ def main(user_name, quiz_name, quiz_type):
 
 if __name__ == "__main__":
     user_name = "Soyboy227"
-    quiz_name = "TestQuiz"
-    main(user_name, quiz_name)
+    quiz_name = "StateCapitals"
+    quiz_type = "mixed quiz"
+    main(user_name, quiz_name, quiz_type)

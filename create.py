@@ -14,7 +14,6 @@ class CreateQuizName:
         self.width = width
         self.height = height
         self.init_pygame()
-        self.clock = pygame.time.Clock()
         self.quiz_name = ""
         self.prompt_text = "Enter the name for your quiz:"
         self.font = pygame.font.Font(None, 35)
@@ -23,11 +22,13 @@ class CreateQuizName:
         self.BG_COLOR = constants.WHITE
         self.keep_looping = True
 
+    #Function to initialize pygame
     def init_pygame(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Quiz Name Input")
 
+    #Function to initialize some default rectangles that need to be rendered
     def _initialize_rectangles(self):
         long_thin_rectangle_width = self.width - 20
         long_thin_rectangle_height = 45
@@ -35,6 +36,7 @@ class CreateQuizName:
         self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
         self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
+    #Handle events function to deal with user input
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,11 +47,12 @@ class CreateQuizName:
                 elif event.key == pygame.K_BACKSPACE:
                     self.quiz_name = self.quiz_name[:-1]
                 elif event.key == pygame.K_RETURN:
-                    #if len(self.quiz_name.strip()) > 0:
-                    self.keep_looping = False
+                    if len(self.quiz_name.strip()) > 0:
+                        self.keep_looping = False
                 else:
                     self.quiz_name += event.unicode
 
+    #Draw function to display stuff to the user on the python application
     def draw(self):
         self.screen.fill(self.BG_COLOR)
 
@@ -58,7 +61,6 @@ class CreateQuizName:
 
         pygame.draw.rect(self.screen, self.text_background_color, self.input_rect)
 
-        # Render the input text surface
         input_surface = self.font.render(self.quiz_name, True, constants.BLACK)
         input_rect = input_surface.get_rect(topleft=(self.input_rect.x + 10, self.input_rect.y + 5))  # Adjust the position
         self.screen.blit(input_surface, input_rect)
@@ -79,7 +81,6 @@ class CreateQuizName:
 
     def main(self):
         while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
             self.handle_events()
             self.draw()
         return self.quiz_name
@@ -94,7 +95,6 @@ class CreateQuizQuestions:
         self.width = width
         self.height = height
         self.init_pygame()
-        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 35)
         self.question = ""
         self.answer = ""
@@ -105,6 +105,7 @@ class CreateQuizQuestions:
         self.keep_looping = True
         self._initialize_rectangles()
 
+    #Function to initialize some default rectangles that need to be rendered
     def _initialize_rectangles(self):
         long_thin_rectangle_width = self.width - 20
         long_thin_rectangle_height = 45
@@ -112,11 +113,13 @@ class CreateQuizQuestions:
         self.prompt_rect = pygame.Rect(10, 10, self.width - 20, 40)
         self.input_rect = pygame.Rect(10, self.height - offset, long_thin_rectangle_width, long_thin_rectangle_height)
 
+    #Function to initialize pygame
     def init_pygame(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Create Quiz Questions")
 
+    #Handle events function to deal with user input
     def handle_events(self):
         if len(self.quiz_name) == 0:
             self.keep_looping = False
@@ -148,17 +151,15 @@ class CreateQuizQuestions:
                     else:
                         self.question += event.unicode
 
+    #Draw function to display stuff to the user on the python application
     def draw(self):
         self.screen.fill(self.BG_COLOR)
 
-        # Draw question prompt
         prompt_surface = self.font.render(self.prompt_text, True, constants.BLACK)
         self.screen.blit(prompt_surface, (10, 10))
 
-        # Draw input rectangle
         pygame.draw.rect(self.screen, self.text_background_color, self.input_rect)
 
-        # Render the input text surface
         if self.prompt_text == self.prompt_text_answer:
             input_surface = self.font.render(self.answer, True, constants.BLACK)
         else:
@@ -167,7 +168,6 @@ class CreateQuizQuestions:
         self.screen.blit(input_surface, input_rect)
 
         if self.prompt_text == "Enter a question:":
-            # Draw directions below the input box
             directions1 = "When field is complete, press enter to continue"
             directions2 = "Or leave empty and press enter to exit"
             directions_surface1 = self.font.render(directions1, True, constants.BLACK)
@@ -177,7 +177,6 @@ class CreateQuizQuestions:
             self.screen.blit(directions_surface1, directions_rect1)
             self.screen.blit(directions_surface2, directions_rect2)
         if self.prompt_text == self.prompt_text_answer:
-            # Draw directions below the input box
             directions = "When field is complete, press enter to continue"
             directions_surface = self.font.render(directions, True, constants.BLACK)
             directions_rect = directions_surface.get_rect(left=10, top=60)
@@ -185,6 +184,7 @@ class CreateQuizQuestions:
 
         pygame.display.flip()
 
+    #Function to add a question to the user created quiz, which is stored as a csv file
     def add_question_to_csv(self):
         file_path = os.path.join("data", "quizzes", f"{self.quiz_name}.csv")
         with open(file_path, "a", newline="") as csv_file:
@@ -193,7 +193,6 @@ class CreateQuizQuestions:
 
     def main(self):
         while self.keep_looping:
-            self.clock.tick(constants.FRAME_RATE)
             self.handle_events()
             self.draw()
 
@@ -201,7 +200,7 @@ def main():
     mydialog = CreateQuizName()
     quiz_name = mydialog.main()
     #Debug Print Statement
-    print("QUIZ NAME IS: ", quiz_name)
+    #print("QUIZ NAME IS: ", quiz_name)
     mydialog = CreateQuizQuestions(quiz_name)
     mydialog.main()
     
